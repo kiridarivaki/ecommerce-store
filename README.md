@@ -11,6 +11,9 @@ The core technologies implemented in this project include:
 * **Java**: JSP Pages for the View module of the app, interacting with Servlets (Controllers) which handle the business logic. DAOs are utilized for data access and POJOs represent the entities of the app.
 * **HTML, CSS**: Utilized for styling the application's user interface.
 * **JavaScript**: Enables front-end interactivity and dynamic cost generation depending on the customizations. AJAX calls are used for the dynamic refresh of shoe sizes.
+* **JDBC**: Database connectivity.
+* **Maven**: Project build automation.
+* **Smart Tomcat Plugin**: Server integration.
 
 ---
 
