@@ -1,0 +1,91 @@
+.custom-main-navbar {
+    background-color: #2a5553;
+    box-shadow: none;
+    height: 125px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.custom-main-navbar .navbar-brand {
+    padding: 0;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+}
+
+.custom-main-navbar .navbar-brand img {
+    height: 90px;
+    width: auto;
+    margin-left: 15px;
+}
+
+.custom-main-navbar .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.custom-main-navbar .navbar-nav .nav-item {
+    margin-left: 20px;
+}
+
+.custom-main-navbar .custom-nav-link {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    color: #f0f0f0;
+    font-size: 22px;
+    letter-spacing: 2px;
+    padding: 10px 15px;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.custom-main-navbar .custom-nav-link:hover,
+.custom-main-navbar .custom-nav-link:focus {
+    color: #ffffff;
+    text-decoration: none;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 991.98px) {
+    .custom-main-navbar {
+        height: auto;
+        position: relative;
+        background-color: #3c817d;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.32);
+    }
+    .custom-main-navbar .navbar-brand {
+        margin-right: 0;
+    }
+
+    .custom-main-navbar .navbar-collapse {
+        background-color: #2a5553;
+        border-radius: 8px;
+        margin-top: 10px;
+        padding: 10px 0;
+    }
+
+    .custom-main-navbar .navbar-nav {
+        width: 100%;
+    }
+
+    .custom-main-navbar .navbar-nav .nav-item {
+        margin: 0;
+        text-align: center;
+    }
+
+    .custom-main-navbar .custom-nav-link {
+        padding: 10px;
+        color: #ffffff;
+        text-shadow: none;
+    }
+    .custom-main-navbar .custom-nav-link:hover,
+    .custom-main-navbar .custom-nav-link:focus {
+        color: #7faaa2;
+    }
+}

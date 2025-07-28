@@ -1,0 +1,385 @@
+:root {
+    --color-primary-dark: #295b58;
+    --color-secondary-dark: #2a5553;
+    --color-accent-light: #d9d9d9;
+    --color-accent-red: #b13168;
+    --color-dark-grey: #636262;
+    --color-text-white: #ffffff;
+    --color-text-black: #000000;
+    --shadow-alpha-low: rgba(0, 0, 0, 0.25);
+    --shadow-alpha-high: rgba(0, 0, 0, 0.6);
+    --color-button-hover-bg: var(--color-text-white);
+    --color-social-goto-hover-bg: #3C827E;
+    --logo-stroke-color: #2e968f;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.main-menu {
+    background-color: var(--color-text-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 0;
+    position: relative;
+    z-index: 0;
+}
+
+.main-menu .overlap-wrapper {
+   background-color: var(--color-text-white);
+   width: 1440px;
+   height: 1024px;
+   position: relative;
+   overflow: hidden;
+   z-index: 1;
+}
+
+.main-menu .overlap {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100vw;
+   height: 100vh;
+   background-image: url("../img/shoe.jpg");
+   background-size: cover;
+   background-position: center center;
+   z-index: -1;
+}
+
+.main-menu .overlap-group {
+   position: absolute;
+   width: 1156px;
+   height: 181px;
+   top: 14px;
+   left: 250px;
+   z-index: 2;
+}
+
+.main-menu .rectangle {
+   width: 870px;
+   height: 170px;
+   top: 3px;
+   left: 286px;
+   background-color: var(--color-primary-dark);
+   box-shadow: 0px 4px 4px var(--shadow-alpha-low);
+   position: absolute;
+   border-radius: 10px;
+}
+
+.main-menu .group {
+   position: absolute;
+   width: 265px;
+   height: 181px;
+   top: 0; /* Adjusted: Ensure this is at the very top of its parent (.overlap-group) */
+   left: 0;
+   display: flex; /* Kept flex for vertical spacing */
+   flex-direction: column;
+   justify-content: space-between;
+}
+
+.main-menu .signup,
+.main-menu .aboutus,
+.main-menu .login {
+   position: relative; /* Relative to .group */
+   width: 259px;
+   height: 52px;
+   background-color: var(--color-accent-light);
+   border-radius: 10px;
+   transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+   cursor: pointer;
+}
+
+/* Precise positioning within the flex container .group */
+.main-menu .login { /* This is the top button */
+    top: 0;
+    left: 0;
+    box-shadow: 5px 5px 2px var(--color-accent-red);
+}
+.main-menu .signup { /* This is the middle button */
+    top: 0; /* Will be spaced by flexbox */
+    left: 0;
+    box-shadow: 5px 5px 2px var(--color-primary-dark);
+}
+.main-menu .aboutus { /* This is the bottom button */
+    top: 0; /* Will be spaced by flexbox */
+    left: 0;
+    box-shadow: 5px 5px 2px var(--color-dark-grey);
+}
+
+.main-menu .text-wrapper {
+   position: absolute;
+   width: 224px;
+   top: 15px;
+   left: 18px;
+   font-family: 'Inter', sans-serif;
+   font-weight: 300;
+   color: var(--color-text-black);
+   font-size: 20px;
+   text-align: center;
+   letter-spacing: 4px;
+   line-height: normal;
+   white-space: nowrap;
+}
+
+.main-menu .group-wrapper {
+   position: absolute;
+   width: 539px;
+   height: 118px;
+   top: 44px;
+   left: 224px;
+}
+
+.main-menu .overlap-group-wrapper {
+   width: 543px;
+   height: 118px;
+}
+
+.main-menu .overlap-group-3 {
+   position: relative;
+   width: 539px;
+   height: 117px;
+   left: -1px;
+}
+
+.main-menu .text-wrapper-2 {
+   position: absolute;
+   width: 539px;
+   top: 27px;
+   left: 10px;
+   -webkit-text-stroke: 1px var(--color-text-white);
+   text-stroke: 1px var(--color-text-white);
+   font-family: 'Inter', sans-serif;
+   font-weight: 400;
+   color: var(--color-text-white);
+   font-size: 28px;
+   text-align: center;
+   letter-spacing: 16.8px;
+   line-height: 90px;
+   white-space: nowrap;
+}
+
+.main-menu .text-wrapper-3 {
+   position: absolute;
+   width: 314px;
+   top: 0;
+   left: 70px;
+   font-family: 'Inter', sans-serif;
+   font-weight: 500;
+   color: var(--color-text-white);
+   font-size: 55px;
+   text-align: center;
+   letter-spacing: 33px;
+   line-height: 30px;
+}
+
+.main-menu .group-2 {
+   position: absolute;
+   width: 245px;
+   height: 120px;
+   top: 30px;
+   left: 904px;
+}
+
+.main-menu .socials1-wrapper,
+.main-menu .socials2-wrapper,
+.main-menu .socials3-wrapper {
+   position: absolute;
+   width: 52px;
+   height: 52px;
+   background-color: var(--color-secondary-dark);
+   border-radius: 10px;
+   box-shadow: inset 0px 4px 4px var(--shadow-alpha-low);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+   cursor: pointer;
+}
+
+.main-menu .socials1-wrapper { top: 68px; left: 162px; }
+.main-menu .socials2-wrapper { top: 68px; left: 26px; }
+.main-menu .socials3-wrapper { top: 68px; left: 94px; }
+
+.main-menu #socials1 { width: 39px; height: 32px; }
+.main-menu #socials2 { height: 38px; width: 38px; }
+.main-menu #socials3 { height: 37px; width: 38px; }
+
+.main-menu .text-wrapper-4 {
+   position: absolute;
+   width: 243px;
+   top: 0;
+   left: 0;
+   font-family: 'Inter', sans-serif;
+   font-weight: 400;
+   color: rgba(255, 255, 255, 0.7);
+   font-size: 22px;
+   text-align: center;
+   letter-spacing: 17.6px;
+   line-height: 90px;
+   white-space: nowrap;
+}
+
+.main-menu .group-3 {
+   position: absolute;
+   width: 546px;
+   height: 93px;
+   top: 400px;
+   left: 449px;
+   z-index: 1;
+}
+
+.main-menu .overlap-3 {
+   position: relative;
+   width: 542px;
+   height: 93px;
+}
+
+.main-menu .text-wrapper-5 {
+   position: absolute;
+   width: 246px;
+   top: 0;
+   left: 265px;
+   font-family: 'Inter', sans-serif;
+   font-weight: 500;
+   color: var(--color-text-white);
+   font-size: 38px;
+   text-align: center;
+   letter-spacing: 7.6px;
+   line-height: normal;
+}
+
+.main-menu .text-wrapper-7 {
+   position: absolute;
+   width: 542px;
+   top: 8px;
+   left: 0;
+   font-family: 'Inter', sans-serif;
+   font-weight: 200;
+   color: var(--color-text-white);
+   font-size: 40px;
+   text-align: center;
+   letter-spacing: 8px;
+   line-height: normal;
+}
+
+.main-menu .span {
+   font-family: 'Inter', sans-serif;
+   font-weight: 200;
+   color: var(--color-text-white);
+   font-size: 40px;
+   letter-spacing: 8px;
+}
+
+.main-menu .text-wrapper-6 {
+   text-decoration: line-through;
+}
+
+.main-menu .overlap-4 {
+   position: absolute;
+   width: 196px;
+   height: 173px;
+   top: 25px;
+   left: 27px;
+   z-index: 2;
+}
+
+.main-menu .rectangle-2 {
+   width: 196px;
+   height: 165px;
+   top: 0;
+   left: 0;
+   background-color: var(--color-accent-light);
+   position: absolute;
+   border-radius: 10px;
+}
+
+.main-menu .group-4 {
+   position: absolute;
+   width: 113px;
+   height: 136px;
+   top: 37px;
+   left: 50px;
+}
+
+.main-menu .overlap-5 {
+   position: relative;
+   width: 109px;
+   height: 136px;
+   top: -4px;
+   left: -4px;
+}
+
+.main-menu .logo img {
+   position: absolute;
+   width: 103px;
+   top: 0;
+   left: 0;
+   mix-blend-mode: multiply;
+   height: auto;
+}
+
+.main-menu .gotoform {
+    position: absolute;
+    width: 224px;
+    height: 50px;
+    top: 670px;
+    left: 1150px;
+    z-index: 2;
+}
+
+.main-menu .gotoform a.button { /* Target the anchor tag specifically */
+    text-decoration: none; /* Remove underline from the link */
+    display: block; /* Make the anchor fill its parent for clickability */
+    width: 100%;
+    height: 100%;
+}
+
+.main-menu .text-wrapper-8 {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    color: var(--color-text-white);
+    background-color: var(--color-secondary-dark);
+    box-shadow: inset 0px 4px 4px var(--shadow-alpha-low);
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 4px;
+    line-height: 50px;
+    white-space: nowrap;
+    display: block;
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.button:hover .signup,
+.button:hover .login,
+.button:hover .aboutus {
+    background-color: var(--color-button-hover-bg);
+    box-shadow: 2px 2px 2px var(--shadow-alpha-high);
+}
+
+.button:hover .socials1-wrapper,
+.button:hover .socials2-wrapper,
+.button:hover .socials3-wrapper {
+    background-color: var(--color-social-goto-hover-bg);
+    box-shadow: 2px 2px 2px var(--shadow-alpha-high);
+}
+
+.main-menu .gotoform .button:hover .text-wrapper-8 {
+    background-color: var(--color-social-goto-hover-bg);
+    box-shadow: 2px 2px 2px var(--shadow-alpha-high);
+}

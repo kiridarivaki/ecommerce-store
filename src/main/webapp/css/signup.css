@@ -1,0 +1,206 @@
+:root {
+    --primary-dark: #295b58;
+    --secondary-dark: #2a5553;
+    --accent-light: #d9d9d9;
+    --accent-red: #b13168;
+    --dark-grey-shadow: #636262;
+    --text-white: #ffffff;
+    --text-black: #000000;
+    --shadow-alpha-low: rgba(0, 0, 0, 0.25);
+    --shadow-alpha-high: rgba(0, 0, 0, 0.6);
+    --hover-darken: #3C827E;
+    --input-focus-shadow: rgba(41, 91, 88, 0.25);
+
+    /* NEW: Lighter background color */
+    --page-background: #e0f2f1; /* A very light green/teal */
+    /* NEW: Lighter green for icons */
+    --icon-color: #4db6ac; /* A light teal that complements the palette */
+}
+
+body {
+    background-color: var(--page-background);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px var(--shadow-alpha-high);
+    background-color: var(--text-white);
+    padding: 25px;
+    width: 100%;
+    max-width: 450px;
+    box-sizing: border-box;
+}
+
+.card-header {
+    background-color: var(--primary-dark);
+    color: var(--text-white);
+    border-bottom: none;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 18px 25px;
+    font-weight: 600;
+    font-size: 1.6rem;
+    text-align: center;
+    margin: -25px -25px 30px -25px;
+    letter-spacing: 0.5px;
+}
+
+.card-title {
+    color: var(--text-white);
+    font-weight: 700;
+}
+
+.form-control {
+    border: 1px solid var(--accent-light);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 1rem;
+    color: var(--text-black);
+    background-color: var(--text-white);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+    outline: none;
+}
+
+.form-label {
+    color: var(--primary-dark);
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+}
+
+/* NEW: Styling for input-group-text (where icons are) */
+.input-group-text {
+    background-color: var(--icon-color); /* Lighter green background */
+    border: 1px solid var(--icon-color); /* Matching border */
+    color: var(--text-white); /* White icons for contrast */
+    border-radius: 6px 0 0 6px; /* Match input border radius on left side */
+    padding: 0.65rem 0.75rem; /* Adjusted padding to better align icon vertically */
+    display: flex;
+    align-items: center;
+}
+
+/* Ensure the input next to it has rounded corners on the right */
+.input-group > .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
+.btn-primary {
+    background-color: var(--secondary-dark);
+    border-color: var(--secondary-dark);
+    color: var(--text-white);
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+    background-color: var(--hover-darken);
+    border-color: var(--hover-darken);
+    box-shadow: 0 2px 4px var(--shadow-alpha-low);
+}
+
+/* Styling for "Are you an artist?" button */
+.btn-secondary {
+    background-color: var(--primary-dark); /* Using primary-dark for consistency */
+    border-color: var(--primary-dark);
+    color: var(--text-white);
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--hover-darken);
+    border-color: var(--hover-darken);
+    box-shadow: 0 2px 4px var(--shadow-alpha-low);
+}
+
+
+.btn-link {
+    color: var(--primary-dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.btn-link:hover {
+    color: var(--hover-darken);
+    text-decoration: underline;
+}
+
+.text-center {
+    color: var(--primary-dark);
+}
+
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+
+.d-grid {
+    display: grid !important;
+}
+
+a {
+    color: var(--primary-dark);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--hover-darken);
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 450px;
+}
+
+/* Specific styling for the password toggle button to match the input-group-text */
+.input-group .btn-outline-secondary {
+    background-color: var(--icon-color);
+    border-color: var(--icon-color);
+    color: var(--text-white);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background-color: var(--hover-darken);
+    border-color: var(--hover-darken);
+    color: var(--text-white);
+}
+
+.input-group .btn-outline-secondary:focus {
+    box-shadow: 0 0 0 0.2rem var(--input-focus-shadow);
+    outline: none;
+}

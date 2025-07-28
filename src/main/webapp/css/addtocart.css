@@ -1,0 +1,45 @@
+body{
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+}
+
+.shopping {
+  width: 60px;
+  height: 60px;
+}
+
+.shopping .overlap-group {
+  position: relative;
+  width: 52px;
+  height: 58px;
+  top: 2px;
+}
+
+.shopping .vector {
+  position: absolute;
+  width: 50px;
+  height: 57px;
+  top: 0;
+}
+
+.shopping .circle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 36px;
+  right: 1px;
+}
+
+.shopping p {
+  text-align: center;
+  font-size: 12px;
+  font-family: "Inter", sans-serif;
+  line-height: 5px; 
+  margin-top: 8px;
+  color: #ffffff;
+}
+
+a {
+  text-decoration: none;
+}
