@@ -1,0 +1,34 @@
+<%@ page import="java.util.Collections" %>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/toastr-config.js"></script>
+
+<%
+    String toastrError = (String) session.getAttribute("toastrError");
+    String toastrWarning = (String) session.getAttribute("toastrWarning");
+    String toastrSuccess = (String) session.getAttribute("toastrSuccess");
+
+    session.removeAttribute("toastrError");
+    session.removeAttribute("toastrWarning");
+    session.removeAttribute("toastrSuccess");
+%>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const errorMsg = "<%= (toastrError != null) ? toastrError : "" %>";
+        const warningMsg = "<%= (toastrWarning != null) ? toastrWarning : "" %>";
+        const successMsg = "<%= (toastrSuccess != null) ? toastrSuccess : "" %>";
+
+        if (errorMsg.trim() !== '') {
+            toastr.error(errorMsg, "Error!");
+        }
+        if (warningMsg.trim() !== '') {
+            toastr.warning(warningMsg, "Warning!");
+        }
+        if (successMsg.trim() !== '') {
+            toastr.success(successMsg, "Success!");
+        }
+    });
+</script>
