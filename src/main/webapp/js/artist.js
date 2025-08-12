@@ -1,47 +1,63 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let selectedArtistId = null;
-
     const selectArtistButtons = document.querySelectorAll('.select-artist-button');
-    const sketchLink = document.getElementById('sketch-link');
-    const basketLink = document.getElementById('basket-link');
+    const artistCards = document.querySelectorAll('.artist-card');
+    const selectedArtistIdInput = document.getElementById('selectedArtistId');
+    const saveArtistBtn = document.getElementById('saveArtistBtn');
+    const addToBasketBtn = document.getElementById('addToBasketBtn');
+
+    const artistSavedSuccessfully = document.body.dataset.artistSaved === 'true';
+
+    function updateButtonState() {
+        const hasSelection = selectedArtistIdInput.value && selectedArtistIdInput.value !== "-1";
+
+        saveArtistBtn.disabled = !hasSelection;
+
+        addToBasketBtn.disabled = !(hasSelection || artistSavedSuccessfully);
+    }
+
+    function highlightSelectedArtist() {
+        const preselectedArtistId = selectedArtistIdInput.value;
+        if (preselectedArtistId && preselectedArtistId !== "-1") {
+            artistCards.forEach(card => {
+                if (card.dataset.artistId === preselectedArtistId) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+        }
+    }
+
+    updateButtonState();
+    highlightSelectedArtist();
 
     selectArtistButtons.forEach(button => {
         button.addEventListener('click', function() {
             const artistId = this.dataset.artistId;
 
-            selectArtistButtons.forEach(btn => {
-                if (btn !== this) {
-                    btn.classList.remove('selected');
-                    btn.textContent = 'Select Artist';
-                }
+            artistCards.forEach(card => {
+                card.classList.remove('selected');
             });
 
-            this.classList.toggle('selected');
-            if (this.classList.contains('selected')) {
-                selectedArtistId = artistId;
-                this.textContent = 'Selected';
-                enableButtons();
-            } else {
-                selectedArtistId = null;
-                this.textContent = 'Select Artist';
-                disableButtons();
-            }
+            this.closest('.artist-card').classList.add('selected');
+
+            selectedArtistIdInput.value = artistId;
+
+            updateButtonState();
         });
     });
 
-    function enableButtons() {
-        sketchLink.removeAttribute('disabled');
-        sketchLink.classList.remove('disabled');
-        basketLink.removeAttribute('disabled');
-        basketLink.classList.remove('disabled');
-    }
+    saveArtistBtn.addEventListener('click', function(event) {
+        if (!selectedArtistIdInput.value || selectedArtistIdInput.value === "-1") {
+            event.preventDefault();
+            toastr.warning("Please select an artist before saving.", "Selection Required!");
+        }
+    });
 
-    function disableButtons() {
-        sketchLink.setAttribute('disabled', 'true');
-        sketchLink.classList.add('disabled');
-        basketLink.setAttribute('disabled', 'true');
-        basketLink.classList.add('disabled');
-    }
-
-    disableButtons();
+    addToBasketBtn.addEventListener('click', function(event) {
+        if (!selectedArtistIdInput.value || selectedArtistIdInput.value === "-1") {
+            event.preventDefault();
+            toastr.warning("Please save your artist selection first.", "Action Required!");
+        }
+    });
 });
