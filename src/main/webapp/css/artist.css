@@ -1,7 +1,6 @@
 html, body {
     width: 100%;
     height: 100%;
-    margin-top: 20px;
     padding: 0;
     min-width: 100%;
     min-height: 100%;
@@ -22,6 +21,7 @@ html, body {
 
 .main-content {
     width: 100%;
+    margin-top: 100px;
     max-width: 1440px;
     padding-top: 80px;
     box-sizing: border-box;
@@ -184,6 +184,7 @@ html, body {
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     padding: 20px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -297,8 +298,10 @@ html, body {
     width: 100%;
     display: flex;
     justify-content: center;
+    gap: 20px;
 }
 
+#saveArtistBtn,
 #addToBasketBtn {
     background-color: #3c817d;
     color: #ffffff;
@@ -314,12 +317,14 @@ html, body {
     letter-spacing: 1px;
 }
 
+#saveArtistBtn:hover,
 #addToBasketBtn:hover {
     background-color: #2a5553;
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
+#saveArtistBtn:disabled,
 #addToBasketBtn:disabled {
     background-color: #888;
     cursor: not-allowed;
@@ -351,8 +356,8 @@ html, body {
 }
 
 .artist-card.selected {
-    border: 3px solid #007bff; /* Example highlight color */
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); /* Optional glow */
+    border: 3px solid #007bff;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
 }
 
 @media (max-width: 1200px) {
@@ -376,6 +381,7 @@ html, body {
     .artist-details {
         font-size: 0.95rem;
     }
+    #saveArtistBtn,
     #addToBasketBtn {
         font-size: 1.1rem;
         padding: 12px 30px;
@@ -419,6 +425,11 @@ html, body {
         width: 22px;
         height: 22px;
     }
+    .form-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    #saveArtistBtn,
     #addToBasketBtn {
         width: 90%;
         padding: 10px 20px;
@@ -460,6 +471,7 @@ html, body {
         width: 20px;
         height: 20px;
     }
+    #saveArtistBtn,
     #addToBasketBtn {
         font-size: 0.9rem;
         padding: 8px 15px;
