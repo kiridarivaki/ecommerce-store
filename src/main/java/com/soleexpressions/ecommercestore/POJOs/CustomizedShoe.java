@@ -12,8 +12,11 @@ public class CustomizedShoe {
     private double laceColorCost;
 
     private int artistId;
+    private int basketId;
     private String description;
     private double calculatedTotalCost;
+
+    private String shoeName;
 
     public CustomizedShoe() {
     }
@@ -22,7 +25,7 @@ public class CustomizedShoe {
                           String selectedBaseColor, double baseColorCost,
                           String selectedSoleColor, double soleColorCost,
                           String selectedLaceColor, double laceColorCost,
-                          String description, double calculatedTotalCost) {
+                          String description) {
         this.shoeId = shoeId;
         this.selectedSize = selectedSize;
         this.selectedBaseColor = selectedBaseColor;
@@ -133,6 +136,14 @@ public class CustomizedShoe {
         this.artistId = artistId;
     }
 
+    public int getBasketId() {
+        return basketId;
+    }
+
+    public void setBasketId(int basketId) {
+        this.basketId = basketId;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -147,5 +158,13 @@ public class CustomizedShoe {
 
     public void setCalculatedTotalCost(double calculatedTotalCost) {
         this.calculatedTotalCost = calculatedTotalCost;
+    }
+
+    public String getShoeName() {
+        return shoeName;
+    }
+
+    public void setShoeName(String shoeName) {
+        this.shoeName = shoeName;
     }
 }
