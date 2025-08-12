@@ -3,6 +3,9 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.soleexpressions.ecommercestore.POJOs.ArtistProfile" %>
 <%@ page import="com.soleexpressions.ecommercestore.POJOs.User" %>
+<%@ page import="com.soleexpressions.ecommercestore.DAOs.CustomizedShoeDAO" %>
+<%@ page import="com.soleexpressions.ecommercestore.DAOs.CustomizedShoeDAOImpl" %>
+<%@ page import="com.soleexpressions.ecommercestore.POJOs.CustomizedShoe" %>
 
 <%
     List<ArtistProfile> artistProfiles = (List<ArtistProfile>) request.getAttribute("artistProfiles");
@@ -11,23 +14,7 @@
     }
 
     String customizationIdParam = request.getParameter("customizationId");
-    int customizationId = -1;
-    if (customizationIdParam != null && !customizationIdParam.isEmpty()) {
-        try {
-            customizationId = Integer.parseInt(customizationIdParam);
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid customizationId parameter: " + customizationIdParam);
-        }
-    }
-
-    String toastrError = (String) session.getAttribute("toastrError");
-    if (toastrError != null) session.removeAttribute("toastrError");
-
-    String toastrWarning = (String) session.getAttribute("toastrWarning");
-    if (toastrWarning != null) session.removeAttribute("toastrWarning");
-
-    String toastrSuccess = (String) session.getAttribute("toastrSuccess");
-    if (toastrSuccess != null) session.removeAttribute("toastrSuccess");
+    int customizationId = Integer.parseInt(customizationIdParam);
 %>
 
 <!DOCTYPE html>
@@ -42,7 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/artist.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/navbar.css"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css"/>
 </head>
 <body>
     <div class="desktop">
@@ -55,7 +42,7 @@
                 <form id="artistSelectionForm" action="${pageContext.request.contextPath}/artists" method="post">
                     <input type="hidden" name="customizationId" value="<%= customizationId %>" />
                     <input type="hidden" id="selectedArtistId" name="selectedArtistId" value="" />
-                    <input type="hidden" name="action" value="updateArtistAndAddToBasket" />
+                    <input type="hidden" name="action" value="updateArtist" />
 
                     <div class="artist-list">
                         <% if (artistProfiles.isEmpty()) { %>
@@ -98,68 +85,24 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary" id="addToBasketBtn" disabled>Add to Basket</button>
+                        <button type="submit" class="btn btn-primary" id="saveArtistBtn" disabled>Save Artist</button>
                     </div>
                 </form>
+
+                <div class="form-actions">
+                    <form id="addToBasketForm" action="${pageContext.request.contextPath}/basket" method="post">
+                        <input type="hidden" name="action" value="add" />
+                        <input type="hidden" name="customizationId" value="<%= customizationId %>" />
+                        <button type="submit" class="btn btn-success" id="addToBasketBtn" disabled>Add to Basket</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+    <jsp:include page="/views/common/footer.jsp"/>
+    <%@ include file="/jspf/toastr-messages.jspf" %>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="${pageContext.request.contextPath}/js/toastr-config.js"></script>
-
-    <script>
-        const toastrError = "<%= toastrError != null ? toastrError : "" %>";
-        const toastrWarning = "<%= toastrWarning != null ? toastrWarning : "" %>";
-        const toastrSuccess = "<%= toastrSuccess != null ? toastrSuccess : "" %>";
-
-        document.addEventListener('DOMContentLoaded', function() {
-            if (toastrError.trim() !== '') {
-                $(document).ready(function() {
-                    toastr.error(toastrError, "Error!");
-                });
-            }
-            if (toastrWarning.trim() !== '') {
-                $(document).ready(function() {
-                    toastr.warning(toastrWarning, "Warning!");
-                });
-            }
-            if (toastrSuccess.trim() !== '') {
-                $(document).ready(function() {
-                    toastr.success(toastrSuccess, "Success!");
-                });
-            }
-
-            const selectArtistButtons = document.querySelectorAll('.select-artist-button');
-            const artistCards = document.querySelectorAll('.artist-card');
-            const selectedArtistIdInput = document.getElementById('selectedArtistId');
-            const addToBasketBtn = document.getElementById('addToBasketBtn');
-
-            selectArtistButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const artistId = this.dataset.artistId;
-
-                    artistCards.forEach(card => {
-                        card.classList.remove('selected');
-                    });
-
-                    this.closest('.artist-card').classList.add('selected');
-                    selectedArtistIdInput.value = artistId;
-                    addToBasketBtn.disabled = false;
-                });
-            });
-
-            addToBasketBtn.addEventListener('click', function(event) {
-                if (!selectedArtistIdInput.value) {
-                    event.preventDefault();
-                    $(document).ready(function() {
-                        toastr.warning("Please select an artist before adding to basket.", "Selection Required!");
-                    });
-                }
-            });
-        });
-    </script>
+    <script src="${pageContext.request.contextPath}/js/artist.js"></script>
 </body>
 </html>

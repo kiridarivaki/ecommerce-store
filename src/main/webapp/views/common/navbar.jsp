@@ -13,14 +13,30 @@
                 <li class="nav-item">
                     <a class="nav-link custom-nav-link" href="${pageContext.request.contextPath}/views/common/aboutus.html">ABOUT US</a>
                 </li>
+                <%
+                    Object userObject = session.getAttribute("userobject");
+                    if (userObject == null) {
+                %>
                 <li class="nav-item">
                     <a class="nav-link custom-nav-link" href="${pageContext.request.contextPath}/views/auth/signup.jsp">SIGN UP</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link custom-nav-link" href="${pageContext.request.contextPath}/views/auth/login.jsp">LOG IN</a>
                 </li>
+                <%
+                    } else {
+                %>
+                <li class="nav-item">
+                    <a class="nav-link custom-nav-link" href="${pageContext.request.contextPath}/logout">LOG OUT</a>
+                </li>
+                <%
+                    }
+                %>
                 <li class="nav-item">
                     <a class="nav-link custom-nav-link" href="${pageContext.request.contextPath}/preferences">CUSTOMIZE</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link custom-nav-link" href="${pageContext.request.contextPath}/basket">BASKET</a>
                 </li>
             </ul>
         </div>

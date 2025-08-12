@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -52,7 +52,7 @@
           </div>
         </div>
       </div>
-      <div class="gotoform"><a class="button" href="preferences.jsp"><div><div class="text-wrapper-8">GO TO FORM</div></div></a></div>
+      <div class="gotoform"><a class="button" href="${pageContext.request.contextPath}/preferences"><div><div class="text-wrapper-8">GO TO FORM</div></div></a></div>
     </div>
   </body>
 </html>

@@ -7,6 +7,7 @@ import com.soleexpressions.ecommercestore.DAOs.ShoeDAO;
 import com.soleexpressions.ecommercestore.DAOs.ShoeDAOImpl;
 import com.soleexpressions.ecommercestore.POJOs.CustomizedShoe;
 import com.soleexpressions.ecommercestore.POJOs.Shoe;
+import com.soleexpressions.ecommercestore.POJOs.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,9 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,42 +40,45 @@ public class PreferencesServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, NumberFormatException {
         HttpSession session = request.getSession();
-        Object userObject = session.getAttribute("userobject");
+        User user = (User) session.getAttribute("userobject");
 
-        if (userObject == null) {
-            session.setAttribute("errorMessage", "You must be logged in to access the customization page.");
+        if (user == null) {
+            session.setAttribute("toastrError", "You must be logged in to access this page.");
             response.sendRedirect(request.getContextPath() + "/views/auth/login.jsp");
+            
             return;
         }
 
         String action = request.getParameter("action");
         if ("getShoeSizes".equals(action)) {
             handleGetShoeSizes(request, response);
+
             return;
         }
 
-        List<Shoe> allShoes;
         try {
-            allShoes = shoeDAO.getAllShoes();
-            request.setAttribute("allShoes", allShoes);
-        } finally {
-            request.getRequestDispatcher("/views/product/preferences.jsp").forward(request, response);
+            List<Shoe> shoes = shoeDAO.getAllShoes();
+            request.setAttribute("shoes", shoes);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Failed to retrieve all shoes. With message: {0}", e);
+            session.setAttribute("toastrError", "Failed to retrieve shoe models. Please try again later.");
+            response.sendRedirect(request.getContextPath() + "/views/product/preferences.jsp");
+
+            return;
         }
+
+        request.getRequestDispatcher("/views/product/preferences.jsp").forward(request, response);
     }
 
     private void handleGetShoeSizes(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         String shoeIdParam = request.getParameter("shoeId");
-
         List<String> availableSizes = new ArrayList<>();
 
-        LOGGER.log(Level.INFO, "Received getShoeSizes request. shoeIdParam: '" + shoeIdParam + "'");
-
         if (shoeIdParam == null || shoeIdParam.trim().isEmpty()) {
-            LOGGER.log(Level.INFO, "Shoe ID not provided or empty for getShoeSizes. Returning empty list.");
             response.getWriter().write(gson.toJson(availableSizes));
             return;
         }
@@ -85,60 +89,30 @@ public class PreferencesServlet extends HttpServlet {
 
             if (shoe != null && shoe.getAvailableSizes() != null) {
                 availableSizes = shoe.getAvailableSizes();
-            } else {
-                LOGGER.log(Level.INFO, "Shoe with ID " + shoeId + " not found or has no available sizes. Returning empty list.");
             }
             response.getWriter().write(gson.toJson(availableSizes));
-
         } catch (NumberFormatException e) {
-            LOGGER.log(Level.WARNING, "Invalid Shoe ID format for getShoeSizes: '" + shoeIdParam + "'. Returning empty list.", e);
+            LOGGER.log(Level.WARNING, "Invalid Shoe ID format {0}. With message: {1} ", new Object[]{shoeIdParam, e});
             response.getWriter().write(gson.toJson(availableSizes));
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "An unexpected error occurred in handleGetShoeSizes for ID: " + shoeIdParam, e);
+            LOGGER.log(Level.SEVERE, "Failed to retrieve shoe sizes for shoe for ID: {0}. With message: {1}", new Object[]{shoeIdParam, e});
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write(gson.toJson(new ErrorResponse("An unexpected server error occurred.")));
-        }
-    }
-
-    private static class ErrorResponse {
-        String message;
-
-        public ErrorResponse(String message) {
-            this.message = message;
+            response.getWriter().write(gson.toJson(Map.of("message", "An unexpected server error occurred.")));
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, NumberFormatException {
         HttpSession session = request.getSession();
-        Object userObject = session.getAttribute("userobject");
+        User user = (User) session.getAttribute("userobject");
 
-        if (userObject == null) {
-            session.setAttribute("errorMessage", "You must be logged in to customize a shoe.");
+        if (user == null) {
+            session.setAttribute("toastrError", "You must be logged in to customize a shoe.");
             response.sendRedirect(request.getContextPath() + "/views/auth/login.jsp");
             return;
         }
 
-        int currentUserId = -1;
-        try {
-            if (userObject instanceof Integer) {
-                currentUserId = (Integer) userObject;
-            } else if (userObject != null && userObject.getClass().getName().contains("User")) {
-                java.lang.reflect.Method getIdMethod = userObject.getClass().getMethod("getId");
-                currentUserId = (Integer) getIdMethod.invoke(userObject);
-            }
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error extracting user ID from session for POST: " + e.getMessage(), e);
-            request.setAttribute("errorMessage", "Invalid user session. Please log in again.");
-            doGet(request, response);
-            return;
-        }
-
-        if (currentUserId == -1) {
-            request.setAttribute("errorMessage", "Invalid user ID found in session. Please log in again.");
-            doGet(request, response);
-            return;
-        }
+        int currentUserId = user.getId();
 
         try {
             String selectedShoeIdParam = request.getParameter("selectedShoeId");
@@ -146,6 +120,7 @@ public class PreferencesServlet extends HttpServlet {
             String selectedBaseColor = request.getParameter("selectedBaseColor");
             String selectedSoleColor = request.getParameter("selectedSoleColor");
             String selectedLaceColor = request.getParameter("selectedLaceColor");
+            String description = request.getParameter("description");
             String calculatedTotalCostParam = request.getParameter("cost");
 
             if (selectedShoeIdParam == null || selectedShoeIdParam.isEmpty() ||
@@ -154,45 +129,47 @@ public class PreferencesServlet extends HttpServlet {
                     selectedSoleColor == null || selectedSoleColor.isEmpty() ||
                     selectedLaceColor == null || selectedLaceColor.isEmpty() ||
                     calculatedTotalCostParam == null || calculatedTotalCostParam.isEmpty()) {
-                request.setAttribute("errorMessage", "Missing required customization details. Please ensure all options are selected.");
-                doGet(request, response);
+                session.setAttribute("toastrError", "Missing required customization details. Please ensure all options are selected.");
+                response.sendRedirect(request.getContextPath() + "/preferences");
+
                 return;
             }
 
             int shoeId = Integer.parseInt(selectedShoeIdParam);
-            double calculatedTotalCost = Double.parseDouble(calculatedTotalCostParam);
+            double calculatedTotalCost;
 
             Shoe baseShoe = shoeDAO.getShoeById(shoeId);
             if (baseShoe == null) {
-                request.setAttribute("errorMessage", "Selected shoe model not found. Please try again.");
-                doGet(request, response);
+                session.setAttribute("toastrError", "Selected shoe model not found. Please try again.");
+                response.sendRedirect(request.getContextPath() + "/preferences");
+
                 return;
             }
 
-            double reCalculatedCost = baseShoe.getBaseCost();
+            double shoeCost = baseShoe.getBaseCost();
 
             double sizeDouble = Double.parseDouble(selectedSize);
             if (sizeDouble >= 39 && sizeDouble <= 41) {
-                reCalculatedCost += 50;
+                shoeCost += 50;
             } else if (sizeDouble == 44 || sizeDouble == 45) {
-                reCalculatedCost += 40;
+                shoeCost += 40;
             } else if (sizeDouble == 36) {
-                reCalculatedCost -= 20;
+                shoeCost -= 20;
             } else if (sizeDouble == 37) {
-                reCalculatedCost -= 10;
+                shoeCost -= 10;
             }
 
             double baseColorCost = 0;
             if (!(selectedBaseColor.equalsIgnoreCase("#000000")) && !(selectedBaseColor.equalsIgnoreCase("#ffffff"))) {
                 baseColorCost = 20;
             }
-            reCalculatedCost += baseColorCost;
+            shoeCost += baseColorCost;
 
             double soleColorCost = 0;
             if (!(selectedSoleColor.equalsIgnoreCase("#000000")) && !(selectedSoleColor.equalsIgnoreCase("#ffffff"))) {
                 soleColorCost = 15;
             }
-            reCalculatedCost += soleColorCost;
+            shoeCost += soleColorCost;
 
             double laceColorCost = 0;
             if (selectedLaceColor.equalsIgnoreCase("yellow") || selectedLaceColor.equalsIgnoreCase("blue") || selectedLaceColor.equalsIgnoreCase("red")) {
@@ -200,9 +177,9 @@ public class PreferencesServlet extends HttpServlet {
             } else if (selectedLaceColor.equalsIgnoreCase("pink") || selectedLaceColor.equalsIgnoreCase("purple") || selectedLaceColor.equalsIgnoreCase("orange")) {
                 laceColorCost = 15;
             }
-            reCalculatedCost += laceColorCost;
+            shoeCost += laceColorCost;
 
-            calculatedTotalCost = reCalculatedCost;
+            calculatedTotalCost = shoeCost;
 
             CustomizedShoe customizedShoe = new CustomizedShoe();
             customizedShoe.setShoeId(shoeId);
@@ -214,25 +191,24 @@ public class PreferencesServlet extends HttpServlet {
             customizedShoe.setSelectedLaceColor(selectedLaceColor);
             customizedShoe.setLaceColorCost(laceColorCost);
             customizedShoe.setArtistId(currentUserId);
-            customizedShoe.setDescription("User custom creation");
+            customizedShoe.setDescription(description != null ? description : "");
             customizedShoe.setCalculatedTotalCost(calculatedTotalCost);
 
             customizedShoeDAO.addCustomizedShoe(customizedShoe);
+            session.setAttribute("toastrSuccess", "Customization saved successfully!");
+            LOGGER.log(Level.INFO, "Customization Id {0} saved successfully.", customizedShoe.getId());
 
             response.sendRedirect(request.getContextPath() + "/artists?customizationId=" + customizedShoe.getId());
-
         } catch (NumberFormatException e) {
-            LOGGER.log(Level.WARNING, "Invalid number format in POST parameters during customization: " + e.getMessage(), e);
-            request.setAttribute("errorMessage", "Invalid input for shoe customization. Please ensure all fields are correctly selected.");
-            doGet(request, response);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Database error: Could not save customized shoe.", e);
-            request.setAttribute("errorMessage", "Database error: Could not save your customization. Please try again later.");
-            doGet(request, response);
+            LOGGER.log(Level.WARNING, "Invalid number format in request parameters during customization. With message: {0}", e);
+            session.setAttribute("toastrError", "Invalid input for shoe customization. Please ensure all fields are correctly selected.");
+
+            response.sendRedirect(request.getContextPath() + "/preferences");
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "An unexpected error occurred during shoe customization POST.", e);
-            request.setAttribute("errorMessage", "An unexpected error occurred during customization. Please try again.");
-            doGet(request, response);
+            LOGGER.log(Level.SEVERE, "An unexpected error occurred during shoe customization. With message: {0}", e);
+            session.setAttribute("toastrError", "An unexpected error occurred during customization. Please try again.");
+
+            response.sendRedirect(request.getContextPath() + "/preferences");
         }
     }
 }

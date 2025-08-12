@@ -1,6 +1,6 @@
 package com.soleexpressions.ecommercestore.controllers;
 
-import com.soleexpressions.ecommercestore.DAOs.UserDAOIml;
+import com.soleexpressions.ecommercestore.DAOs.UserDAOImpl;
 import com.soleexpressions.ecommercestore.POJOs.ArtistProfile;
 import com.soleexpressions.ecommercestore.POJOs.User;
 
@@ -11,22 +11,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/signUp")
 public class SignUpHandlerServlet extends HttpServlet {
-
-    private UserDAOIml userDAO;
+    private static final Logger LOGGER = Logger.getLogger(SignUpHandlerServlet.class.getName());
+    private UserDAOImpl userDAO;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        userDAO = new UserDAOIml();
+        userDAO = new UserDAOImpl();
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html; charset=UTF-8");
+        HttpSession session = request.getSession();
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -46,38 +48,34 @@ public class SignUpHandlerServlet extends HttpServlet {
             String instagram = request.getParameter("instagram");
 
             artistProfile = new ArtistProfile(style, bio, portfolioUrl, facebook, instagram);
-        } else {
-            role = "user";
         }
 
         User newUser = new User(username, password, firstname, lastname, email, phoneNumber, role);
 
         try {
-            if (userDAO.doesUsernameExist(username)) {
-                request.setAttribute("errorMessage", "Username already taken. Please choose a different one.");
-                request.getRequestDispatcher("/views/auth/signUp.jsp").forward(request, response);
+            if (userDAO.usernameExists(username)) {
+                session.setAttribute("toastrError", "Username already taken. Please choose a different one.");
+                request.getRequestDispatcher("/views/auth/signup.jsp").forward(request, response);
+
                 return;
             }
 
-            User registeredUser = userDAO.registerUser(newUser, artistProfile);
+            User registeredUser = userDAO.register(newUser, artistProfile);
 
             if (registeredUser != null) {
-                HttpSession session = request.getSession();
                 session.setAttribute("userobject", registeredUser);
-                response.sendRedirect(request.getContextPath() + "/views/product/preferences.jsp");
-            } else {
-                request.setAttribute("errorMessage", "Registration failed. Please try again.");
-                request.getRequestDispatcher("/views/auth/signUp.jsp").forward(request, response);
-            }
+                session.setAttribute("toastrSuccess", "Registration successful. Welcome!");
+                LOGGER.log(Level.INFO, "Registration successful for user {0}.", username);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Database error during registration: " + e.getMessage());
-            request.getRequestDispatcher("/views/auth/signUp.jsp").forward(request, response);
+                response.sendRedirect(request.getContextPath() + "/preferences");
+            } else {
+                throw new Exception();
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "An unexpected error occurred during registration: " + e.getMessage());
-            request.getRequestDispatcher("/views/auth/signUp.jsp").forward(request, response);
+            session.setAttribute("toastrError", "Registration failed. Please try again.");
+            LOGGER.log(Level.WARNING, "Registration failed for user {0}. With message: {1}", new Object[]{username, e});
+
+            request.getRequestDispatcher("/views/auth/signup.jsp").forward(request, response);
         }
     }
 }

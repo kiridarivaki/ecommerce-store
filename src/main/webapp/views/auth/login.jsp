@@ -12,7 +12,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/login.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
 </head>
 <body>
     <div class="desktop">
@@ -37,18 +36,9 @@
         </form>
       </div>
     </div>
+    <%@ include file="/jspf/toastr-messages.jspf" %>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/login.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="${pageContext.request.contextPath}/js/toastr-config.js"></script>
-    <script>
-        const errorMessage = "<c:out value='${errorMessage}' escapeXml='true' default=''/>";
-        if (typeof errorMessage !== 'undefined' && errorMessage !== null && errorMessage.trim() !== '') {
-            $(document).ready(function() {
-                toastr.error(errorMessage, "Login Failed!");
-            });
-        }
-    </script>
+    <script src="${pageContext.request.contextPath}/js/login.js"></script>
 </body>
 </html>

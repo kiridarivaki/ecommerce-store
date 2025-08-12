@@ -1,6 +1,6 @@
 package com.soleexpressions.ecommercestore.controllers;
 
-import com.soleexpressions.ecommercestore.DAOs.UserDAOIml;
+import com.soleexpressions.ecommercestore.DAOs.UserDAOImpl;
 import com.soleexpressions.ecommercestore.POJOs.User;
 
 import javax.servlet.ServletException;
@@ -10,22 +10,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/login")
 public class LoginHandlerServlet extends HttpServlet {
-
-    private UserDAOIml userDAO;
+    private static final Logger LOGGER = Logger.getLogger(LoginHandlerServlet.class.getName());
+    private UserDAOImpl userDAO;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        userDAO = new UserDAOIml();
+        userDAO = new UserDAOImpl();
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html; charset=UTF-8");
+        HttpSession session = request.getSession();
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -34,22 +36,21 @@ public class LoginHandlerServlet extends HttpServlet {
             User authenticatedUser = userDAO.authenticate(username, password);
 
             if (authenticatedUser != null) {
-                HttpSession session = request.getSession();
                 session.setAttribute("userobject", authenticatedUser);
+                LOGGER.log(Level.INFO, "Login successful for user {0}.", username);
 
                 response.sendRedirect(request.getContextPath() + "/preferences");
             } else {
-                request.setAttribute("errorMessage", "Invalid username or password.");
-                request.getRequestDispatcher("/views/auth/login.jsp").forward(request, response);
+                session.setAttribute("toastrError", "Invalid username or password. Please try again.");
+                LOGGER.log(Level.WARNING, "Invalid credentials provided for user {0}.", username);
+
+                response.sendRedirect(request.getContextPath() + "/views/auth/login.jsp");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Database error during login: " + e.getMessage());
-            request.getRequestDispatcher(request.getContextPath() + "/views/auth/login.jsp").forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "An unexpected error occurred during login: " + e.getMessage());
-            request.getRequestDispatcher(request.getContextPath() + "/views/auth/login.jsp").forward(request, response);
+            LOGGER.log(Level.SEVERE, "Login failed for user {0}. With message: {1}", new Object[]{username, e});
+            session.setAttribute("toastrError", "An unexpected error occurred during login. Please try again.");
+
+            response.sendRedirect(request.getContextPath() + "/views/auth/login.jsp");
         }
     }
 

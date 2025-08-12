@@ -5,15 +5,17 @@ import com.soleexpressions.ecommercestore.POJOs.ArtistProfile;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ArtistProfileDAOImpl implements ArtistProfileDAO {
     private final DBConnector dbConnector = new DBConnector();
+    private static final Logger LOGGER = Logger.getLogger(ArtistProfileDAOImpl.class.getName());
 
     @Override
-    public List<ArtistProfile> getAllArtists() throws SQLException {
+    public List<ArtistProfile> getAllArtists() throws Exception {
         List<ArtistProfile> artists = new ArrayList<>();
         String sql = "SELECT user_id, style, bio, portfolio_url, facebook_url, instagram_url FROM artist_profiles";
         try (Connection conn = dbConnector.getConnection();
@@ -31,13 +33,14 @@ public class ArtistProfileDAOImpl implements ArtistProfileDAO {
                 artists.add(artist);
             }
         } catch (Exception e) {
-            throw new SQLException(e);
+            LOGGER.log(Level.SEVERE, "Error fetching all available artists. With message:", e);
+            throw e;
         }
         return artists;
     }
 
     @Override
-    public ArtistProfile getArtistByUserId(int userId) throws SQLException {
+    public ArtistProfile getArtistByUserId(int userId) throws Exception {
         ArtistProfile artist = null;
         String sql = "SELECT user_id, style, bio, portfolio_url, facebook_url, instagram_url FROM artist_profiles WHERE user_id = ?";
         try (Connection conn = dbConnector.getConnection();
@@ -56,7 +59,8 @@ public class ArtistProfileDAOImpl implements ArtistProfileDAO {
                 }
             }
         } catch (Exception e) {
-            throw new SQLException(e);
+            LOGGER.log(Level.SEVERE, "Error fetching artist profile. With message:", e);
+            throw e;
         }
         return artist;
     }

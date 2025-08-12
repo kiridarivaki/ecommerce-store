@@ -3,14 +3,12 @@ package com.soleexpressions.ecommercestore.DAOs;
 import com.soleexpressions.ecommercestore.POJOs.ArtistProfile;
 import com.soleexpressions.ecommercestore.POJOs.User;
 
-import java.sql.SQLException;
-
 public interface UserDAO {
-    public User authenticate(String username, String plainPassword) throws SQLException;
+    public User authenticate(String username, String plainPassword) throws Exception;
 
-    public boolean doesUsernameExist(String username) throws SQLException;
+    public boolean usernameExists(String username) throws Exception;
 
-    public User registerUser(User user, ArtistProfile artistProfile) throws SQLException;
+    public User register(User user, ArtistProfile artistProfile) throws Exception;
 
-    public User getUserById(int userId) throws SQLException;
+    public User getUserById(int userId) throws Exception;
 }

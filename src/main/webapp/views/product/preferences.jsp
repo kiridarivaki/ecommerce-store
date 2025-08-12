@@ -4,9 +4,9 @@
 <%@ page import="com.soleexpressions.ecommercestore.POJOs.Shoe" %>
 
 <%
-    List<Shoe> allShoes = (List<Shoe>) request.getAttribute("allShoes");
-    if (allShoes == null) {
-        allShoes = new ArrayList<>();
+    List<Shoe> shoes = (List<Shoe>) request.getAttribute("shoes");
+    if (shoes == null) {
+        shoes = new ArrayList<>();
     }
 %>
 
@@ -22,9 +22,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/preferences.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/navbar.css"/>
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css"/>
 </head>
 <body>
     <div class="desktop">
@@ -38,7 +36,7 @@
                         <label>Choose a shoe model:</label>
                         <select name="shoemodel" id="modelButton" class="custom-select">
                             <option selected value="">Select Model</option>
-                            <% for (Shoe shoe : allShoes) { %>
+                            <% for (Shoe shoe : shoes) { %>
                                 <option value="<%= shoe.getId() %>" data-base-cost="<%= shoe.getBaseCost() %>"><%= shoe.getModel() %></option>
                             <% } %>
                         </select>
@@ -78,6 +76,11 @@
                             <% } %>
                         </div>
                     </div>
+                    <div class="question-box q6">
+                        <h1>Step #6</h1>
+                        <label for="description">Add a description for your artist:</label>
+                        <textarea id="description" name="description" rows="4" placeholder="e.g., 'Please add a star on the side.'"></textarea>
+                    </div>
                     <input type="hidden" name="cost" id="cost" value="0"/>
                 </div>
             </form>
@@ -94,6 +97,8 @@
             </div>
         </div>
     </div>
+    <jsp:include page="/views/common/footer.jsp"/>
+    <%@ include file="/jspf/toastr-messages.jspf" %>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/preferences.js"></script>
